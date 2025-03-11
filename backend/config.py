@@ -4,8 +4,11 @@ import sys
 import os
 
 
+sys.path.append('/home/avari/ChatBot_Repo/RAG/Chatbot')
+from ollama_query_data import get_response
 
-from  ollama_query_data import get_reponse
+for p in sys.path:
+    print(p)
 
 app = Flask(__name__)
 CORS(app) ##check if this is necessary
@@ -16,6 +19,10 @@ def chat():
     query = request.json.get("message")
     response = get_response(query)
     return jsonify({'response': response})
+
+@app.route("/")
+def welcome():
+    return render_template('test.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -17,7 +17,7 @@ Answer the question based on the above context: {question}
 """
 
 
-def get_reponse(query_text):
+def get_response(query_text):
     
     # parses arguments (query)
     ##parser = argparse.ArgumentParser()
@@ -37,16 +37,15 @@ def get_reponse(query_text):
 
 
     ###if len(results) == 0 or (results[0][1] < 0.5):
-       ## print(f"Unable to find matching results.")
-       ## return
+    ## print(f"Unable to find matching results.")
+    ## return
     
     ##creates prompt for ollama
     context_text = "\n\n---\n\n".join([doc.page_content for doc, _score in results])
     prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
     prompt = prompt_template.format(context=context_text, question=query_text)
-    print(prompt)
 
-   ##gets ollama reponse to prompt
+##gets ollama reponse to prompt
     model = ChatOllama(model = "llama3.1", temperature = 0.3)
     response_text = model.invoke(prompt).content
 
