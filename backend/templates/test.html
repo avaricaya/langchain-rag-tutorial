@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .chatbot-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            padding: 20px;
+        }
+        .chatbot-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .chatbot-messages {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #cccccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .chatbot-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="chatbot-container">
+        <div class="chatbot-header">
+            <img src="{{ chatbot_icon_url }}" alt="Chatbot Icon" style="width: 50px; height: 50px;">
+            <h2>Chatbot</h2>
+        </div>
+        <div class="chatbot-messages" id="chatbot-messages">
+            <!-- Chat messages will go here -->
+        </div>
+        <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Type a message...">
+    </div>
+    <script>
+        document.getElementById('chatbot-input').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                const userMessage = event.target.value;
+                event.target.value = '';
+
+                // Display user message
+                const messageContainer = document.getElementById('chatbot-messages');
+                const userMessageElement = document.createElement('div');
+                userMessageElement.textContent = 'You: ' + userMessage;
+                messageContainer.appendChild(userMessageElement);
+
+                // Send user message to backend
+                fetch('/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: userMessage })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Display chatbot response
+                    const chatbotResponseElement = document.createElement('div');
+                    chatbotResponseElement.textContent = 'Chatbot: ' + data.response;
+                    messageContainer.appendChild(chatbotResponseElement);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
